@@ -17,7 +17,7 @@ public class Partida {
         return tabuleiro;
     }
 
-    public Jogador getCurrentJogador() {
+    public Jogador getJogadorAtual() {
         return jogador1.isSuaVez() ? jogador1 : jogador2;
     }
 

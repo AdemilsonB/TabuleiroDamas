@@ -1,5 +1,6 @@
 package Controllers;
 
+import Enumeration.Cor;
 import Models.Jogador;
 import Models.Partida;
 import Models.Peca;
@@ -41,13 +42,19 @@ public class PartidaService {
         }
     }
 
-    public void movePeca(Partida partida, int posicaoInicialLinha, int posicaoInicialColuna, int posicaoFinalLinha, int posicaoFinalColuna) {
+    public void movePeca(Partida partida, int posicaoInicialLinha, int posicaoInicialColuna, int posicaoFinalLinha, int posicaoFinalColuna, int qtdPontosAtual) {
         if (!tabuleiroService.movimentoValido(partida, posicaoInicialLinha, posicaoInicialColuna, posicaoFinalLinha, posicaoFinalColuna)) {
             return;
         }
 
         tabuleiroService.movePeca(partida, posicaoInicialLinha, posicaoInicialColuna, posicaoFinalLinha, posicaoFinalColuna);
-//        mudarVezJogador(partida);
+
+        Jogador jogadorAtual = partida.getJogadorAtual();
+        Boolean possibilidadeCaptura = tabuleiroService.verificarCapturaPossivel(partida, jogadorAtual, posicaoFinalLinha, posicaoFinalColuna);
+
+        if(qtdPontosAtual == jogadorAtual.getQtdePontos() || !possibilidadeCaptura) {
+            mudarVezJogador(partida);
+        }
     }
 
     public void mudarVezJogador(Partida partida) {

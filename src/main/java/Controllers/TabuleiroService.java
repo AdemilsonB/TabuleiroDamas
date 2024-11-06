@@ -70,8 +70,54 @@ public class TabuleiroService {
         return false;
     }
 
+    public Boolean verificarMovimentoDama(Partida partida, Peca pecaPosicaoAtual, int linhaDestino, int colunaDestino) {
+        int linhaInicial = pecaPosicaoAtual.getPosicaoLinha();
+        int colunaInicial = pecaPosicaoAtual.getPosicaoColuna();
+        Peca[][] tabuleiro = partida.getTabuleiro().getTabuleiro();
+
+        if (Math.abs(linhaDestino - linhaInicial) != Math.abs(colunaDestino - colunaInicial)) {
+            System.out.println("Movimento inválido! A dama só pode se mover na diagonal.");
+            return false;
+        }
+
+        int movimentarLinha = (linhaDestino > linhaInicial) ? 1 : -1;
+        int movimentarColuna = (colunaDestino > colunaInicial) ? 1 : -1;
+        int linhaAtual = linhaInicial + movimentarLinha;
+        int colunaAtual = colunaInicial + movimentarColuna;
+        Peca pecaCapturada = null;
+
+        while (linhaAtual != linhaDestino && colunaAtual != colunaDestino) {
+            Peca pecaNoCaminho = tabuleiro[linhaAtual][colunaAtual];
+
+            if (pecaNoCaminho != null) {
+                if (pecaNoCaminho.getCor().equals(pecaPosicaoAtual.getCor())) {
+                    System.out.println("Movimento inválido! A dama não pode pular uma peça da mesma cor.");
+                    return false;
+                }
+
+                if (pecaCapturada != null) {
+                    System.out.println("Movimento inválido! A dama só pode capturar uma peça por movimento.");
+                    return false;
+                }
+
+                pecaCapturada = pecaNoCaminho;
+            }
+
+            linhaAtual += movimentarLinha;
+            colunaAtual += movimentarColuna;
+        }
+
+        if (pecaCapturada != null) {
+            tabuleiro[pecaCapturada.getPosicaoLinha()][pecaCapturada.getPosicaoColuna()] = null;
+            System.out.println("Peça Capturada!.");
+        }
+
+        return true;
+    }
+
+
     public void efetuarCapturaPeca(Partida partida, Peca pecaCapturada) {
-        Jogador jogador = partida.getCurrentJogador();
+        Jogador jogador = partida.getJogadorAtual();
         Tabuleiro tabuleiro = partida.getTabuleiro();
 
         tabuleiro.removerPeca(pecaCapturada.getPosicaoLinha(), pecaCapturada.getPosicaoColuna());
@@ -84,6 +130,7 @@ public class TabuleiroService {
 
     public boolean movimentoValido(Partida partida, int posicaoLinhaInicial, int posicaoColunaInicial, int posicaoLinhaFinal, int posicaoColunaFinal) {
         Peca pecaPosicaoAtual = partida.getTabuleiro().getPeca(posicaoLinhaInicial, posicaoColunaInicial);
+//        pecaPosicaoAtual.setDama(true);
         Peca pecaPosicaoDestino = partida.getTabuleiro().getPeca(posicaoLinhaFinal, posicaoColunaFinal);
         boolean pecaPosicaoAtualIsDama = false;
         Cor pecaAtuaCor = Cor.BRANCA;
@@ -95,6 +142,10 @@ public class TabuleiroService {
 
         Cor corPecaJogador1 = partida.getJogador1().getCorPecaJogador();
         Cor corPecaJogador2 = partida.getJogador2().getCorPecaJogador();
+
+        if(pecaPosicaoAtualIsDama) {
+            return verificarMovimentoDama(partida, pecaPosicaoAtual, posicaoLinhaFinal, posicaoColunaFinal);
+        }
 
         //Todo válida se o jogador esta movimento sua peça e não a peça do adversário
         if(pecaAtuaCor.equals(corPecaJogador1) && !partida.getJogador1().isSuaVez()) {
@@ -142,4 +193,43 @@ public class TabuleiroService {
 
         return true;
     }
+
+    public boolean verificarCapturaPossivel(Partida partida, Jogador jogadorAtual, int linhaAtual, int colunaAtual) {
+        Peca[][] tabuleiro = partida.getTabuleiro().getTabuleiro();
+        Cor corAdversaria = jogadorAtual.getCorPecaJogador().equals(Cor.BRANCA) ? Cor.PRETA : Cor.BRANCA;
+
+        int[][] direcoes = { {-1, -1}, {-1, 1}, {1, -1}, {1, 1} };
+
+        for (int[] direcao : direcoes) {
+            int linha = linhaAtual + direcao[0];
+            int coluna = colunaAtual + direcao[1];
+            boolean encontrouPecaAdversaria = false;
+            int linhaCaptura = -1, colunaCaptura = -1;
+
+            while (linha >= 0 && linha < 8 && coluna >= 0 && coluna < 8) {
+                Peca peca = tabuleiro[linha][coluna];
+
+                if (peca == null) {
+                    if (encontrouPecaAdversaria) {
+                        System.out.println("Captura possível em: " + linha + ", " + coluna);
+                        return true;
+                    }
+                } else if (peca.getCor().equals(corAdversaria)) {
+                    if (encontrouPecaAdversaria) {
+                        break;
+                    }
+                    encontrouPecaAdversaria = true;
+                    linhaCaptura = linha;
+                    colunaCaptura = coluna;
+                } else {
+                    break;
+                }
+
+                linha += direcao[0];
+                coluna += direcao[1];
+            }
+        }
+        return false;
+    }
+
 }

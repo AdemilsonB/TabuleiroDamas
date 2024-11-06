@@ -8,6 +8,7 @@ public class Tabuleiro {
 
     public Tabuleiro() {
         tabuleiro = new Peca[8][8];
+
         tabuleiroService = new TabuleiroService();
         tabuleiroService.iniciarTabuleiro(tabuleiro);
     }

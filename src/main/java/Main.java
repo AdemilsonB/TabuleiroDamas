@@ -13,7 +13,7 @@ public class Main {
         do {
             partidaService.imprimeTabuleiro(partida);
 
-            Jogador jogadorAtual = partida.getCurrentJogador();
+            Jogador jogadorAtual = partida.getJogadorAtual();
             int qtdPontosAtual = jogadorAtual.getQtdePontos();
 
             System.out.println("Vez do jogador com peças " + (jogadorAtual.getCorPecaJogador().toString()));
@@ -26,14 +26,10 @@ public class Main {
             System.out.println("Digite o número da coluna de destino: ");
             int posicaoFinalColuna = scanner.nextInt();
 
-            partidaService.movePeca(partida, posicaoInicialLinha, posicaoInicialColuna, posicaoFinalLinha, posicaoFinalColuna);
+            partidaService.movePeca(partida, posicaoInicialLinha, posicaoInicialColuna, posicaoFinalLinha, posicaoFinalColuna, qtdPontosAtual);
 
-            if(qtdPontosAtual == jogadorAtual.getQtdePontos()) {
-                partidaService.mudarVezJogador(partida);
-            }
+        } while (partida.getJogadorAtual().getQtdePontos() < 12);
 
-        } while (partida.getCurrentJogador().getQtdePontos() < 12);
-
-        partidaService.encerrarPartida(partida.getCurrentJogador());
+        partidaService.encerrarPartida(partida.getJogadorAtual());
     }
 }
