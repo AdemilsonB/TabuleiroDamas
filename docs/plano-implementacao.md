@@ -1,6 +1,6 @@
 ﻿# Backend de Damas Brasileiras — Plano de Implementação
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> Plano executado tarefa a tarefa em ciclo TDD. Os itens usam checkbox (`- [ ]`) para acompanhamento.
 
 **Goal:** Substituir o protótipo de console por um backend Spring Boot testado que implementa as damas brasileiras oficiais e expõe uma API REST pronta para o front end Angular.
 
@@ -8,7 +8,7 @@
 
 **Tech Stack:** Java 17, Spring Boot 3.3.5, Maven 3.9.9, JUnit 5, AssertJ, springdoc-openapi 2.6.0.
 
-**Spec:** `docs/superpowers/specs/2026-08-15-backend-damas-design.md`
+**Spec:** `docs/especificacao-backend.md`
 
 ## Global Constraints
 
