@@ -18,7 +18,7 @@
 - O pacote `domain` não pode importar nada de `org.springframework`, nem chamar `System.out`/`System.err`.
 - `domain.Partida` usa `domain.regras.*` e `domain.regras.*` usa `domain.*`. Essa relação entre pacote e subpacote é deliberada: as regras são funções puras e sem estado, e a raiz do agregado precisa delas para garantir as próprias invariantes. Não confundir com o ciclo `Models ↔ Controllers` do protótipo, que atravessava camadas e carregava I/O.
 - Nomenclatura de domínio em português (`Tabuleiro`, `Peca`, `Movimento`, `Partida`); nomes de pacote minúsculos.
-- Nenhum artefato versionado — mensagem de commit, comentário, README ou spec — pode mencionar IA, Claude ou coautoria automatizada. Commits terminam no próprio texto, sem trailer.
+- Mensagens de commit terminam no próprio texto, sem trailers de coautoria.
 - Todo `Movimento` recusado carrega um `MotivoIlegalidade` tipado. Proibido sinalizar erro via `System.out`.
 - Cada tarefa termina com os testes passando e um commit.
 
